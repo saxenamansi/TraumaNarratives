@@ -17,3 +17,12 @@ We then use a Zero-inflated Model to analyze the effect of such features on soci
 To be added. 
 
 Published at the 17th ACM Web Science Conference 2025. Link of the paper will be added soon. 
+
+Contents of this repository:
+
+1. Downloading Data.ipynb: code to download Reddit Archival Data.
+2. FilteringPosts.ipynb: Python code to filter posts to retain only those posts made by the victim.
+3. SelectedWords.html:List of relevant words used for filtering posts. 
+4. FeatureExtraction_LLM.ipynb: Python code to extract narrative elements using prompting engineering with Llama 3.1 8B Instruct Mode.
+5. ZIP Model: R Code to extract feature having highest influence on number of comments using a Zero-inflated Poisson Model
+6. Causal Effects Model: R Code to find causal relationships between narrative elements using a Directed Acylic Graph (DAG)
