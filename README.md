@@ -16,4 +16,4 @@ We then use a Zero-inflated Model to analyze the effect of such features on soci
 **Findings:**
 To be added. 
 
-Published at the 17th ACM Web Conference. Link of the paper will be added soon. 
+Published at the 17th ACM Web Science Conference 2025. Link of the paper will be added soon. 
