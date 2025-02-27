@@ -1,4 +1,5 @@
 # TraumaNarratives
+**Title:** 
 Understanding Trauma Narratives on Social Media Platforms
 
 On social media, victims of domestic and sexual violence share their narratives. Such narratives can benefit victims by redefining their identity and receiving support from external sources. 
