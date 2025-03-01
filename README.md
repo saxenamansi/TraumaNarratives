@@ -27,4 +27,5 @@ Contents of this repository:
 4. FeatureExtraction_LLM.ipynb: Python code to extract narrative elements using prompting engineering with Llama 3.1 8B Instruct Mode.
 5. ZIPModel.Rmd: R Code to extract feature having highest influence on number of comments using a Zero-inflated Poisson Model
 6. CausalEffects.Rmd: R Code to find causal relationships between narrative elements using a Directed Acylic Graph (DAG)
-7. CausalEffectResultScores.pdf: Causal Effect results of all causal models, i.e., (cause-effect pairs) we hypothesized, quantified by Z-scores and p-values. 
+7. CausalEffectResultScores.pdf: Causal Effect results of all causal models, i.e., (cause-effect pairs) we hypothesized, quantified by Z-scores and p-values.
+8. NarrativeFeatureDescriptions.pdf: A description of all the trauma narrative features used in this project. 
