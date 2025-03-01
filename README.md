@@ -21,9 +21,10 @@ Published at the 17th ACM Web Science Conference 2025. Link of the paper will be
 
 Contents of this repository:
 
-1. Downloading Data.ipynb: code to download Reddit Archival Data.
+1. DownloadingData.ipynb: code to download Reddit Archival Data.
 2. FilteringPosts.ipynb: Python code to filter posts to retain only those posts made by the victim.
-3. SelectedWords.html:List of relevant words used for filtering posts. 
+3. SelectedWords.html: Words selected for filtering posts and retain only first-person narratives written by victims. 
 4. FeatureExtraction_LLM.ipynb: Python code to extract narrative elements using prompting engineering with Llama 3.1 8B Instruct Mode.
-5. ZIP Model: R Code to extract feature having highest influence on number of comments using a Zero-inflated Poisson Model
-6. Causal Effects Model: R Code to find causal relationships between narrative elements using a Directed Acylic Graph (DAG)
+5. ZIPModel.Rmd: R Code to extract feature having highest influence on number of comments using a Zero-inflated Poisson Model
+6. CausalEffects.Rmd: R Code to find causal relationships between narrative elements using a Directed Acylic Graph (DAG)
+7. CausalEffectResultScores.pdf: Causal Effect results of all causal models, i.e., (cause-effect pairs) we hypothesized, quantified by Z-scores and p-values. 
