@@ -1,0 +1,146 @@
+---
+title: "ZIP Model"
+author: "Mansi Saxena, Bhaskar Ray"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(doParallel)
+library(tidyverse)
+library(tidyquant)
+library(dplR)
+library(dplyr)
+library(plotly)
+#library(xlsx)
+library(beepr)
+library(glmglrt)
+library(jtools)
+library(purrr)
+library(pscl)
+library(boot)
+library(broom)
+library(lmtest)
+
+rm(list=ls())
+
+```
+
+```{r Import Data}
+final_df <- read.csv("AllFeatures.csv", header = T)
+
+final_df <- final_df %>% 
+  rename("Injury" = "PhysicalInjury",
+         "ConfrontingAbuser" = "Confrontabuser",
+         "Intoxication" = "Intoxicated",
+         "Abuser" = "DetailedAbuserDiscussion",
+         "SeekingGeneralSupport" = "SeekingSupport")
+
+final_df <- final_df %>% mutate(across(everything(), ~ ifelse(. != "Yes", "No", .)))
+
+res_df <- read.csv("Reddit_Sexual_Domestic_Violence_Data.csv", header = T)
+final_df <- final_df %>% add_column(rel_comments = as.numeric(res_df$rel_comments),
+                                    subreddit = res_df$subreddit)
+
+#colnames(final_df)
+
+```
+
+```{r Big Model}
+sink(file = "ZIP Model Outputs.txt")
+
+# Fit the full model
+print(summary(big_Model <- zeroinfl(
+  as.formula(paste0("rel_comments ~ ", paste(setdiff(colnames(final_df), c("rel_comments", "subreddit")), collapse = " + "), "| subreddit")), 
+  data = final_df
+)))
+
+cat("\n\n")
+
+sink()
+```
+
+# Model Selection:
+
+* Fit full model with all factors
+* Select which factors don't have significant effect - remove each factor from the full model and fit the model
+* Likelihood ratio test of the reduced model vs full model - discard factor for which the test produces largest p-value
+* Keep reducing the features iteratively till we arrive at a model with all significant features
+* Note: The final model may not be a unique model
+
+```{r automated_variable_selection}
+# Initialize list of features
+features <- setdiff(colnames(final_df), c("rel_comments", "subreddit"))
+
+current_model <- big_Model
+iteration <- 1
+
+while (TRUE) {
+  cat("Iteration:", iteration, "\n")
+  
+  # Store p-values for each feature removal
+  p_values <- c()
+  
+  for (feature in features) {
+    # Create a formula excluding the current feature
+    reduced_formula <- as.formula(
+      paste(
+        "rel_comments ~", 
+        paste(setdiff(features, feature), collapse = " + "),
+        "| subreddit"
+      )
+    )
+    
+    # Fit the reduced model
+    reduced_model <- zeroinfl(reduced_formula, data = final_df)
+    
+    # Perform likelihood ratio test with the current model
+    lr_test <- lrtest(current_model, reduced_model)
+    
+    # Store the p-value
+    p_values <- c(p_values, lr_test$`Pr(>Chisq)`[2])
+  }
+  
+  # Check if there are any features with p-values above 0.05
+  non_significant_features <- p_values[p_values >= 0.05]
+  
+  if (length(non_significant_features) == 0) {
+    # If no features with p-value >= 0.05, stop the process
+    cat("No features with p-value above 0.05 remain. Stopping.\n")
+    break
+  }
+  
+  # Find the feature with the largest p-value that is not significant
+  max_p_value <- max(p_values[p_values >= 0.05], na.rm = TRUE)
+  
+  if (is.na(max_p_value)) {
+    # If no non-significant feature remains, stop the process
+    cat("All remaining features are significant. Stopping.\n")
+    break
+  }
+  
+  # Find the corresponding feature to drop
+  feature_to_drop <- features[which.max(p_values[p_values >= 0.05])]
+  cat("Dropping feature:", feature_to_drop, "with p-value:", max_p_value, "\n\n")
+  
+  # Update features and model
+  features <- setdiff(features, feature_to_drop)
+  reduced_formula <- as.formula(
+    paste(
+      "rel_comments ~", 
+      paste(features, collapse = " + "),
+      "| subreddit"
+    )
+  )
+  current_model <- zeroinfl(reduced_formula, data = final_df)
+  
+  iteration <- iteration + 1
+}
+
+# Final model
+cat("\nFinal model retained features:", features, "\n")
+summary(current_model)
+```
+
