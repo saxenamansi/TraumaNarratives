@@ -14,10 +14,7 @@ We extract 5561 victim narratives from Reddit, a popular online platform for sup
 We leverage LLM prompting to perform feature extraction on these narratives. These features are used for our computational approach. 
 We then use a Zero-inflated Model to analyze the effect of such features on social support received, and a Directed Acyclic Graph (DAG) to identifying causal effect relationships between narrative elements. 
 
-**Findings:**
-To be added. 
-
-Published at the 17th ACM Web Science Conference 2025. Link of the paper will be added soon. 
+Published at the 17th ACM Web Science Conference 2025. See paper [here](https://dl.acm.org/doi/full/10.1145/3717867.3717892).
 
 Contents of this repository:
 
